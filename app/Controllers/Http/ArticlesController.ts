@@ -13,24 +13,45 @@ export default class ArticlesController {
 
 
     public async store({request}: HttpContextContract) {
-
+        const manger = request.all()
+        console.log(manger);
+        
         // Data Validattion
         const articleSchema = schema.create({
             title: schema.string(),
             content: schema.string(),
             concerning: schema.string(),
+            illustration: schema.file({
+                size: '2mb',
+                extnames: ['jpg', 'gif', 'png'],
+              }),
+          
         })
         const messages = {
             '*': () => {return "vous avez manqué d'ajouter un champ"}
           }
         const data = await request.validate({ schema: articleSchema, messages })
 
-        //   Article adding
-        const newArticles = await Article.create(data)
-        return {
-            message: "sucess",
-            newArticles
-        } 
+        //   Move the IMG
+        await data.illustration.moveToDisk('../../ArtIMG')
+        //    persiste Data on DB
+        const ArticleData = {
+            title: data.title,
+            content: data.content,
+            concerning: data.concerning,
+            illustration: data.illustration.filePath
+        }
+        try {
+            const newArticles = await Article.create(ArticleData)
+            return {
+                message: "sucess",
+                newArticles
+            } 
+        } catch (error) {
+            return {messages: "Erreur dans la création. L'article existe peut être déjà"}
+        }
+        
+        
     }
 
 

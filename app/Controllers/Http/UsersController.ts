@@ -1,18 +1,17 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules} from '@ioc:Adonis/Core/Validator'
 import User from 'App/Models/User'
 
 export default class UsersController {
 
 
-    public async index({ response }: HttpContextContract) {
+    public async index({ response }) {
         const Users = await User.all()
 
         return response.ok(Users)
     }
 
 
-    public async register({request}: HttpContextContract) {
+    public async register({request}) {
 
         // Data Validattion
         const UserSchema = schema.create({
@@ -45,21 +44,27 @@ export default class UsersController {
     }
 
     // NOT ok
-    public async login({request, auth, response}) {
+    public async login({auth, request, response}) {
         
         const email = request.input('email')
         const password = request.input('password')
 
-        console.log(auth);
+        const user = await User.query().where({email: email})
+        if (!user){
+          return response.status(404).json({
+            error: true,
+            message: 'user not found',
+          })
+        }
         
-        const token = await auth.attempt(email, password)
-        // try {
-        //   const token = await auth.attempt(email, password)
-        //   return token
-        // } catch {
-        //   return response.badRequest('Accès invalides')
-        // }
+        try {
+          const token = await auth.use('api').attempt(email, password, {expiresIn: '24hours'})
+          return {token, user}
+        } catch {
+          return response.badRequest('Accès invalides')
+        }
 
+        
         
     }
 }
