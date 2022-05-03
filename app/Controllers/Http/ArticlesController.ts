@@ -115,7 +115,7 @@ export default class ArticlesController {
 
         await article.delete()
 
-        return response.ok({ message: 'suppression effectué avec succès' })
+        return response.ok({ message: 'success' })
     }
     
 
