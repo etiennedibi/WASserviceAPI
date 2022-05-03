@@ -97,7 +97,7 @@ export default class ArticlesController {
         // Article updating
         aricle.merge(data)
         await aricle.save()
-        return response.ok(aricle)
+        return response.ok({ message: 'sucess' })
     }
 
 
