@@ -12,8 +12,8 @@ export default class Article extends BaseModel {
   @column()
   public content: string
 
-  @column()
-  public illustration: string
+  // @column()
+  // public illustration: string
 
   @column()
   public concerning?: string

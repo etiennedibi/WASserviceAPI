@@ -21,10 +21,10 @@ export default class ArticlesController {
             title: schema.string(),
             content: schema.string(),
             concerning: schema.string(),
-            illustration: schema.file({
-                size: '2mb',
-                extnames: ['jpg', 'gif', 'png'],
-              }),
+            // illustration: schema.file({
+            //     size: '2mb',
+            //     extnames: ['jpg', 'gif', 'png'],
+            //   }),
           
         })
         const messages = {
@@ -33,13 +33,13 @@ export default class ArticlesController {
         const data = await request.validate({ schema: articleSchema, messages })
 
         //   Move the IMG
-        await data.illustration.moveToDisk('../../ArtIMG')
+        // await data.illustration.moveToDisk('../../ArtIMG')
         //    persiste Data on DB
         const ArticleData = {
             title: data.title,
             content: data.content,
             concerning: data.concerning,
-            illustration: data.illustration.filePath
+            // illustration: data.illustration.filePath
         }
         try {
             const newArticles = await Article.create(ArticleData)

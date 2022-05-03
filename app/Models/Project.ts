@@ -17,6 +17,9 @@ export default class ProjectsDemande extends BaseModel {
   @column()
   public description: number
 
+  @column()
+  public files: string
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

@@ -26,15 +26,29 @@ export default class ProjectsController {
             ]),
             comapny: schema.string(),
             description: schema.string(),
+            files: schema.file({
+                size: '2mb',
+                extnames: ['pdf', 'doc,', 'docx'],
+              }),
         })
         const messages = {
             '*': (field, rule) => {return `vous avez manqué d'ajouter un champ ${field}`}
           }
         const data = await request.validate({ schema: ProjectSchema, messages })
-        const alldata = request.all()
+        // const alldata = request.all()
+
+        //   Move the IMG
+        await data.files.moveToDisk('../../ProjectFiles')
 
         //   Project adding
-        const newProjects = await Project.create(alldata)
+        const ProjectData = {
+            fullname: data.fullname,
+            comapny: data.comapny,
+            email: data.email,
+            description: data.description,
+            files: data.files.filePath
+        }
+        const newProjects = await Project.create(ProjectData)
         return {
             message: "sucess",
             newProjects
