@@ -57,12 +57,14 @@ export default class UsersController {
           })
         }
         
-        try {
-          const token = await auth.use('api').attempt(email, password, {expiresIn: '24hours'})
+        const token = await auth.use('api').attempt(email, password, {expiresIn: '24hours'})
           return {token, user}
-        } catch {
-          return response.badRequest('Accès invalides')
-        }
+        // try {
+        //   const token = await auth.use('api').attempt(email, password, {expiresIn: '24hours'})
+        //   return {token, user}
+        // } catch {
+        //   return response.badRequest('Accès invalides')
+        // }
 
         
         
